@@ -228,6 +228,51 @@ class ApiClient {
     });
     return response.data;
   }
+  // Add these methods to the ApiClient class in src/services/api.ts
+
+  // User management endpoints
+  async getUsers(params?: {
+    page?: number;
+    limit?: number;
+    role?: string;
+    search?: string;
+    isActive?: boolean;
+    grade?: string;
+    sortBy?: string;
+  }): Promise<{
+    users: User[];
+    totalPages: number;
+    currentPage: number;
+    total: number;
+  }> {
+    const response = await this.api.get('/users', { params });
+    return response.data;
+  }
+
+  async activateUser(id: string): Promise<{ message: string }> {
+    const response = await this.api.post(`/users/bulk/activate`, { userIds: [id] });
+    return response.data;
+  }
+
+  async deactivateUser(id: string): Promise<{ message: string }> {
+    const response = await this.api.post(`/users/bulk/deactivate`, { userIds: [id] });
+    return response.data;
+  }
+
+  async deleteUser(id: string): Promise<{ message: string }> {
+    const response = await this.api.delete(`/users/${id}`);
+    return response.data;
+  }
+
+  async getUserStats(id: string): Promise<any> {
+    const response = await this.api.get(`/users/${id}/stats`);
+    return response.data;
+  }
+
+  async updateProfile(data: any): Promise<{ message: string; user: User }> {
+    const response = await this.api.put('/auth/profile', data);
+    return response.data;
+  }
 }
 
 export const api = new ApiClient();
